@@ -13,37 +13,40 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 
-from config import YT_CLIENT_SECRET_FILE, YT_TOKEN_FILE, YT_SCOPES
+from config import YT_SCOPES
 
 
-def _get_credentials() -> Credentials:
+def _get_credentials(secret_file: Path, token_file: Path) -> Credentials:
     creds = None
-    if YT_TOKEN_FILE.exists():
-        creds = Credentials.from_authorized_user_file(str(YT_TOKEN_FILE), YT_SCOPES)
+    if token_file.exists():
+        creds = Credentials.from_authorized_user_file(str(token_file), YT_SCOPES)
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            if not YT_CLIENT_SECRET_FILE.exists():
+            if not secret_file.exists():
                 raise FileNotFoundError(
-                    f"YouTube client secret not found at {YT_CLIENT_SECRET_FILE}\n"
-                    "Run: python3 setup_oauth.py"
+                    f"YouTube client secret not found at {secret_file}\n"
+                    "Run: python setup_oauth.py --channel <name>"
                 )
             flow = InstalledAppFlow.from_client_secrets_file(
-                str(YT_CLIENT_SECRET_FILE), YT_SCOPES
+                str(secret_file), YT_SCOPES
             )
             creds = flow.run_local_server(port=0)
 
-        YT_TOKEN_FILE.parent.mkdir(parents=True, exist_ok=True)
-        YT_TOKEN_FILE.write_text(creds.to_json())
+        token_file.parent.mkdir(parents=True, exist_ok=True)
+        token_file.write_text(creds.to_json())
 
     return creds
 
 
-def upload_video(video_path: Path, script: dict) -> str:
+def upload_video(video_path: Path, script: dict, channel: dict = None) -> str:
     """Upload video and return the YouTube video ID."""
-    creds = _get_credentials()
+    from config import get_channel
+    if channel is None:
+        channel = get_channel("did_you_know")
+    creds = _get_credentials(channel["secret_file"], channel["token_file"])
     youtube = build("youtube", "v3", credentials=creds)
 
     title = script.get("title", "Did You Know? 🤯 #Shorts")[:100]
