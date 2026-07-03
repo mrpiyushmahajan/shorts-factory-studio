@@ -124,6 +124,12 @@ CHANNELS = {
 }
 
 
+YT_SCOPES = [
+    "https://www.googleapis.com/auth/youtube.upload",
+    "https://www.googleapis.com/auth/youtube.readonly",
+]
+
+
 def get_channel(name: str) -> dict:
     if name not in CHANNELS:
         raise ValueError(f"Unknown channel: {name}. Choose: {list(CHANNELS.keys())}")
