@@ -34,10 +34,11 @@ if not exist venv (
 call venv\Scripts\activate.bat
 
 :: ── 2. PyTorch CUDA ─────────────────────────────────────────────────────────
-echo [2/7] Installing PyTorch 2.4 + CUDA 12.1 (RTX 4090)...
-pip install torch==2.4.0 torchaudio==2.4.0 --index-url https://download.pytorch.org/whl/cu121 --quiet
-python -c "import torch; assert torch.cuda.is_available(), 'CUDA not available!'; print('[OK] CUDA:', torch.cuda.get_device_name(0))"
-if errorlevel 1 (echo [ERROR] CUDA check failed. Ensure NVIDIA drivers + CUDA 12.1 installed. & pause & exit /b 1)
+echo [2/7] Installing PyTorch 2.6 + CUDA 12.4 (RTX 4090)...
+pip install torch==2.6.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu124 --quiet
+if errorlevel 1 (echo [ERROR] PyTorch install failed. & pause & exit /b 1)
+python -c "import torch; print('[OK] CUDA:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'NOT AVAILABLE')"
+if errorlevel 1 (echo [ERROR] CUDA check failed. Ensure NVIDIA drivers installed. & pause & exit /b 1)
 
 :: ── 3. Core Python deps ──────────────────────────────────────────────────────
 echo [3/7] Installing Python dependencies...
