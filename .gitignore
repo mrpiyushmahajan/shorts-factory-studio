@@ -1,0 +1,32 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# ComfyUI (clone separately, models are too large)
+comfyui/
+
+# Generated output
+output/
+logs/
+data/*/posts_ledger.md
+
+# Remotion build
+remotion/node_modules/
+remotion/public/
+props.json
+
+# YouTube OAuth tokens (never commit!)
+*.json
+!package.json
+!remotion/package.json
+
+# Large media (add your own music)
+assets/music/*.mp3
+assets/music/*.wav
+
+# OS
+.DS_Store
+Thumbs.db

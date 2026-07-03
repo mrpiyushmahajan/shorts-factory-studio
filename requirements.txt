@@ -1,0 +1,24 @@
+# Core pipeline
+edge-tts
+faster-whisper
+soundfile
+numpy
+requests
+google-auth
+google-auth-oauthlib
+google-api-python-client
+python-dotenv
+websockets
+aiohttp
+pillow
+
+# Chatterbox TTS (voice cloning)
+chatterbox-tts
+setuptools<81
+
+# ComfyUI API client
+websocket-client
+
+# Note: PyTorch installed separately in setup.bat with CUDA index
+# torch==2.4.0  ->  pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cu121
+# torchaudio==2.4.0
