@@ -33,27 +33,29 @@ if not exist venv (
     py -3.11 -m venv venv 2>nul || python -m venv venv
 )
 call venv\Scripts\activate.bat
+set PIP=venv\Scripts\pip.exe
+set PY=venv\Scripts\python.exe
 
 :: ── 2. PyTorch CUDA ─────────────────────────────────────────────────────────
 echo [2/7] Installing PyTorch 2.6 + CUDA 12.4 (RTX 4090)...
-python -m pip install --upgrade pip --quiet
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+%PIP% install --upgrade pip
+%PIP% install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124 --no-cache-dir
 if errorlevel 1 (echo [ERROR] PyTorch install failed. & pause & exit /b 1)
-python -c "import torch; print('[OK] CUDA:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'NOT AVAILABLE')"
+%PY% -c "import torch; print('[OK] CUDA:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'NOT AVAILABLE')"
 if errorlevel 1 (echo [ERROR] CUDA check failed. Ensure NVIDIA drivers installed. & pause & exit /b 1)
 
 :: ── 3. Core Python deps ──────────────────────────────────────────────────────
 echo [3/7] Installing Python dependencies...
-pip install -r requirements.txt --quiet
+%PIP% install -r requirements.txt --quiet
 if errorlevel 1 (echo [ERROR] pip install failed. & pause & exit /b 1)
 echo [OK] Python deps installed.
 
 :: ── 4. Chatterbox TTS ───────────────────────────────────────────────────────
 echo [4/7] Installing Chatterbox TTS (voice cloning)...
-pip install chatterbox-tts --quiet
-python -c "from chatterbox.tts import ChatterboxTTS; print('[OK] Chatterbox ready')" 2>nul || (
+%PIP% install chatterbox-tts --quiet
+%PY% -c "from chatterbox.tts import ChatterboxTTS; print('[OK] Chatterbox ready')" 2>nul || (
     echo [WARN] Chatterbox install needs build tools. Installing...
-    pip install setuptools^<81 chatterbox-tts --quiet
+    %PIP% install "setuptools<81" chatterbox-tts --quiet
 )
 
 :: ── 5. ComfyUI ───────────────────────────────────────────────────────────────
@@ -61,7 +63,7 @@ echo [5/7] Setting up ComfyUI (image + video generation)...
 if not exist comfyui (
     git clone https://github.com/comfyanonymous/ComfyUI.git comfyui --depth=1 --quiet
     cd comfyui
-    pip install -r requirements.txt --quiet
+    %PIP% install -r requirements.txt --quiet
     cd ..
     echo [OK] ComfyUI cloned.
 ) else (
@@ -87,7 +89,7 @@ echo [OK] ComfyUI + extensions installed.
 :: ── 6. Models ────────────────────────────────────────────────────────────────
 echo [6/7] Downloading AI models (one-time, ~20GB)...
 echo       This takes 10-30 min depending on connection. Ctrl+C to skip and do later.
-python download_models.py
+%PY% download_models.py
 echo [OK] Models ready.
 
 :: ── 7. Remotion ──────────────────────────────────────────────────────────────
