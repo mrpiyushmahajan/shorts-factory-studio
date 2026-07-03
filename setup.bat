@@ -29,7 +29,8 @@ echo.
 :: ── 1. Python venv ──────────────────────────────────────────────────────────
 echo [1/7] Creating Python virtual environment...
 if not exist venv (
-    python -m venv venv
+    :: Try py launcher with 3.11 first, fall back to python
+    py -3.11 -m venv venv 2>nul || python -m venv venv
 )
 call venv\Scripts\activate.bat
 
