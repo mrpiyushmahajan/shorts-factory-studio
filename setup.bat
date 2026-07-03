@@ -12,7 +12,16 @@ where git >nul 2>&1 || (echo [ERROR] Git not found. Install from https://git-scm
 where python >nul 2>&1 || (echo [ERROR] Python 3.11+ not found. Install from https://python.org & pause & exit /b 1)
 where node >nul 2>&1 || (echo [ERROR] Node.js not found. Install from https://nodejs.org & pause & exit /b 1)
 where ffmpeg >nul 2>&1 || (echo [ERROR] FFmpeg not found. Install from https://ffmpeg.org or: winget install ffmpeg & pause & exit /b 1)
-where claude >nul 2>&1 || (echo [ERROR] Claude CLI not found. Install from https://claude.ai/claude-code & pause & exit /b 1)
+where claude >nul 2>&1 || (
+    echo [ERROR] Claude CLI not found.
+    echo.
+    echo Install it:
+    echo   1. Go to https://claude.ai/claude-code
+    echo   2. Download the Windows installer
+    echo   3. Sign in with your Claude subscription
+    echo   4. Re-run this setup.bat
+    pause & exit /b 1
+)
 
 echo [OK] Prerequisites found.
 echo.

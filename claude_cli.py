@@ -11,7 +11,7 @@ from pathlib import Path
 def ask(prompt: str, max_tokens: int = 4000) -> str:
     """Send a prompt to Claude via CLI and return the text response."""
     result = subprocess.run(
-        ["claude", "-p", prompt],
+        ["claude", "-p", prompt, "--model", "claude-sonnet-5"],
         capture_output=True,
         text=True,
         timeout=120,
