@@ -35,7 +35,8 @@ call venv\Scripts\activate.bat
 
 :: ── 2. PyTorch CUDA ─────────────────────────────────────────────────────────
 echo [2/7] Installing PyTorch 2.6 + CUDA 12.4 (RTX 4090)...
-pip install torch==2.6.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu124 --quiet
+python -m pip install --upgrade pip --quiet
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
 if errorlevel 1 (echo [ERROR] PyTorch install failed. & pause & exit /b 1)
 python -c "import torch; print('[OK] CUDA:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'NOT AVAILABLE')"
 if errorlevel 1 (echo [ERROR] CUDA check failed. Ensure NVIDIA drivers installed. & pause & exit /b 1)
